@@ -1,9 +1,7 @@
-import os
 import json
 import boto3
 
 print('Loading function')
-region_name = os.environ['REGION_NAME']
 sns = boto3.client('sns')
 
 def respond(err, res=None):
