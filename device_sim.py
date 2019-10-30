@@ -18,16 +18,14 @@
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import logging
 import time
+from datetime import datetime
 import argparse
+import random
 import json
 
-AllowedActions = ['both', 'publish', 'subscribe']
-MyDeviceId = "drone-1"
-SleepDuration = 5               // 5 sec
-Bad = -1
-Unknown = 0
-OK = 1
-status = [OK, Unknown, Bad]
+allowedActions = ['both', 'publish', 'subscribe']
+SleepDuration = 5                       # 5 sec
+status = ["Good", "Unknown", "Bad"]
 
 # Custom MQTT message callback
 def customCallback(client, userdata, message):
@@ -47,12 +45,15 @@ parser.add_argument("-k", "--key", action="store", dest="privateKeyPath", help="
 parser.add_argument("-p", "--port", action="store", dest="port", type=int, help="Port number override")
 parser.add_argument("-w", "--websocket", action="store_true", dest="useWebsocket", default=False,
                     help="Use MQTT over WebSocket")
+
 parser.add_argument("-id", "--clientId", action="store", dest="clientId", default="basicPubSub",
                     help="Targeted client id")
-parser.add_argument("-t", "--topic", action="store", dest="topic", default="device/state", help="Targeted topic")
+# sdk/test/Python => topic_1
+parser.add_argument("-t", "--topic", action="store", dest="topic", default="topic_1", help="Targeted topic")
 parser.add_argument("-m", "--mode", action="store", dest="mode", default="both",
-                    help="Operation modes: %s"%str(AllowedActions))
-parser.add_argument("-pid", "--partid", action="store", dest="partid", help="Part id")
+                    help="Operation modes: %s"%str(allowedActions))
+parser.add_argument("-d", "--deviceId", action="store", dest="deviceId", default="pysimulator1",
+                    help="Targeted client id")
 
 args = parser.parse_args()
 host = args.host
@@ -64,8 +65,8 @@ useWebsocket = args.useWebsocket
 clientId = args.clientId
 topic = args.topic
 
-if args.mode not in AllowedActions:
-    parser.error("Unknown --mode option %s. Must be one of %s" % (args.mode, str(AllowedActions)))
+if args.mode not in allowedActions:
+    parser.error("Unknown --mode option %s. Must be one of %s" % (args.mode, str(allowedActions)))
     exit(2)
 
 if args.useWebsocket and args.certificatePath and args.privateKeyPath:
@@ -116,18 +117,22 @@ time.sleep(2)
 
 # Publish to the same topic in a loop forever
 loopCount = 0
-
+pause = True
 
 while True:
     if args.mode == 'both' or args.mode == 'publish':
         message = {}
-        message['my_id'] = args.clientId
+        message['myid'] = args.deviceId
+        message['timestamp'] = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         message['sequence'] = loopCount
-        message['status'] = OK if loopCount % 10 else status[random.randint(0, 2)]
+        message['status'] = status[0] if loopCount % 10 else status[random.randint(0, 2)]
 
         messageJson = json.dumps(message)
         myAWSIoTMQTTClient.publish(topic, messageJson, 1)
         if args.mode == 'publish':
             print('Published topic %s: %s\n' % (topic, messageJson))
         loopCount += 1
-    time.sleep(SleepDuration)
+    if pause:
+        pause = (input("Press Enter to continue...") != 'c')
+    else:
+        time.sleep(SleepDuration)

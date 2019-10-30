@@ -1,0 +1,50 @@
+{
+  "Records": [
+    {
+      "eventID": "ef23cf7855f9dcc581ffa9736b03e948",
+      "eventName": "INSERT",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-west-2",
+      "dynamodb": {
+        "ApproximateCreationDateTime": 1572387314,
+        "Keys": {
+          "DeviceId": {
+            "S": "pysim_drone-1"
+          },
+          "Timestamp": {
+            "S": "29-10-2019 15:15:14"
+          }
+        },
+        "NewImage": {
+          "Status": {
+            "M": {
+              "myid": {
+                "S": "pysim_drone-1"
+              },
+              "Sequence": {
+                "N": "0"
+              },
+              "timestamp": {
+                "S": "29-10-2019 15:15:14"
+              },
+              "status": {
+                "S": "Unknown"
+              }
+            }
+          },
+          "DeviceId": {
+            "S": "pysim_drone-1"
+          },
+          "Timestamp": {
+            "S": "29-10-2019 15:15:14"
+          }
+        },
+        "SequenceNumber": "795000000000008434742695",
+        "SizeBytes": 173,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:us-west-2:408575476948:table/DeviceInfoTable/stream/2019-10-29T17:49:51.744"
+    }
+  ]
+}

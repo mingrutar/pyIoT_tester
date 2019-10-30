@@ -1,0 +1,1 @@
+../myThings/IoTTestDevice/connect_device_package/start.sh
