@@ -1,1 +1,0 @@
-../myThings/IoTTestDevice/connect_device_package/aws-iot-device-sdk-python/samples/basicPubSub/basicPubSub.py
