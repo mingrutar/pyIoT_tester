@@ -15,13 +15,16 @@
  */
  '''
 
-from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
+import sys
 import logging
 import time
 from datetime import datetime
 import argparse
 import random
 import json
+
+sys.path.insert(0, "./AWSIoTPythonSDK")
+from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 allowedActions = ['both', 'publish', 'subscribe']
 SleepDuration = 5                       # 5 sec
